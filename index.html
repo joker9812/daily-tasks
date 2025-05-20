@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>قائمة المهام</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #eef2f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            background-color: #fff;
+            margin-top: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .input-group button {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-item.completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        #showCompletedBtn {
+            margin-top: 10px;
+            background-color: #28a745;
+        }
+
+        #completedTasks {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <h1>قائمة المهام</h1>
+
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="أضف مهمة جديدة...">
+            <button onclick="addTask()">إضافة</button>
+        </div>
+
+        <ul id="taskList" class="task-list"></ul>
+
+        <button id="showCompletedBtn" onclick="toggleCompleted()">عرض المهام المنجزة</button>
+
+        <div id="completedTasks">
+            <h2>المهام المنجزة</h2>
+            <ul id="completedList" class="task-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        const taskInput = document.getElementById("taskInput");
+        const taskList = document.getElementById("taskList");
+        const completedList = document.getElementById("completedList");
+        const completedTasks = document.getElementById("completedTasks");
+        const showCompletedBtn = document.getElementById("showCompletedBtn");
+
+        function addTask() {
+            const text = taskInput.value.trim();
+            if (text === "") return;
+
+            const li = document.createElement("li");
+            li.className = "task-item";
+
+            const span = document.createElement("span");
+            span.textContent = text;
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.addEventListener("change", () => {
+                if (checkbox.checked) {
+                    li.classList.add("completed");
+                    setTimeout(() => {
+                        const completedItem = document.createElement("li");
+                        completedItem.className = "task-item completed";
+                        completedItem.textContent = text;
+
+                        const time = document.createElement("div");
+                        time.className = "timestamp";
+                        const now = new Date();
+                        time.textContent = now.toLocaleString('ar-EG');
+
+                        completedItem.appendChild(time);
+                        completedList.appendChild(completedItem);
+                        taskList.removeChild(li);
+                    }, 1000); // للتجريب، استبدله بـ 24 ساعة لاحقًا
+                }
+            });
+
+            li.appendChild(span);
+            li.appendChild(checkbox);
+            taskList.appendChild(li);
+
+            taskInput.value = '';
+            taskInput.focus();
+        }
+
+        function toggleCompleted() {
+            completedTasks.style.display = completedTasks.style.display === 'none' ? 'block' : 'none';
+            showCompletedBtn.textContent = completedTasks.style.display === 'none' ? 'عرض المهام المنجزة' : 'إخفاء المهام المنجزة';
+        }
+    </script>
+</body>
+</html>
